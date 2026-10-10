@@ -1,0 +1,19 @@
+# free-model-gateway — deploy:
+#   docker compose up -d --build
+#
+# Then open http://<host>:8123/ and log in with the one-time link printed by
+# `docker compose logs gateway` (or the forwardKey from ./data/settings.json).
+
+services:
+  gateway:
+    build: .
+    image: free-model-gateway:latest
+    container_name: free-model-gateway
+    # Docker's init as pid 1: reaps the shell's children properly on stop.
+    init: true
+    ports:
+      - "8123:8123"
+    volumes:
+      # API key, channel credentials, stats. Survives rebuilds.
+      - ./data:/data
+    restart: unless-stopped
